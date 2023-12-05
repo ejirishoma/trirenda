@@ -44,6 +44,7 @@ public class App{
         ArrayList<Bullet> bullets_player=new ArrayList<>();
         ArrayList<Bullet> bullets_enemy=new ArrayList<>();
         ArrayList<Enemy> enemies= new ArrayList<>();
+        Player player = new Player(300, 300);
         Random random=new Random();
 
         int PowerupIs=0;
@@ -62,6 +63,7 @@ public class App{
             gra.setColor(Color.WHITE);
 
             gra.fillRect(0,0,500,500);
+
 
             switch(screen){
                 case START:
@@ -93,6 +95,8 @@ public class App{
                     if(playercolor==0)gra.setColor(Color.BLUE);
                     if(playercolor==1)gra.setColor(Color.RED);
                     if(playercolor==2)gra.setColor(Color.GREEN);
+
+                    // 被弾した際に自機が点滅するよう描画
                     if(invincibleTime==0||(invincibleTime%8==0&&invincibleTime>0)){
                         gra.fillRect(playerX+10,playerY,10,10);
                         gra.fillRect(playerX,playerY+10,30,10);
@@ -205,6 +209,19 @@ public class App{
                         bulletInterval=7;
                     }
                     if(bulletInterval>0)bulletInterval--;
+
+                    // 自機を上下左右へ移動する操作
+                    if(Keyboard.isKeyPressed(KeyEvent.VK_LEFT)) player.moveLeft();
+                    if(Keyboard.isKeyPressed(KeyEvent.VK_RIGHT)) player.moveRight();
+                    if(Keyboard.isKeyPressed(KeyEvent.VK_UP)) player.moveUp();
+                    if(Keyboard.isKeyPressed(KeyEvent.VK_DOWN)) player.moveDown();
+
+                    if(Keyboard.isKeyPressed(KeyEvent.VK_SPACE)&&bulletInterval==0){
+                        bullets_player.add(new Bullet(playerX+12,playerY,playercolor));
+                        bulletInterval=7;
+                    }
+
+                    // 画面下部のHPゲージの表示
                     gra.setColor(Color.RED);
                     for(int i=0;i<playerHP;i++){
                         gra.fillRect(i*500/playerMAXHP,430,500/playerMAXHP,30);
@@ -241,8 +258,8 @@ public class App{
             gra.setColor(Color.BLACK);
             gra.setFont(new Font("SansSerif",Font.PLAIN,10));
             gra.drawString(FPS+"FPS", 0,450);
-            
 
+            player.draw(gra);
             shootingFrame.panel.draw();
             try{
                 long runTime=System.currentTimeMillis()-startTime;
