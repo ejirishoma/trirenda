@@ -27,11 +27,25 @@ public class Bullet {
         g.fillRect(x, y, 5, 5);
     }
 
+    // 弾の移動ロジック
     public void move() {
-        y -= 10; // 弾の移動ロジック
+        y -= 10;
     }
 
+    // 画面外に出たかどうかを判定
     public boolean isOffScreen() {
-        return y < -10; // 画面外に出たかどうかを判定
+        return y < -10;
+    }
+}
+
+// 継承元のBulletクラスより三倍速く移動する弾丸を定義
+class FastBullet extends Bullet {
+    public FastBullet(int x, int y, int color) {
+        super(x, y, color);
+    }
+
+    @Override
+    public void move() {
+        y -= 30;
     }
 }

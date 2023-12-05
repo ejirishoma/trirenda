@@ -40,8 +40,10 @@ public class Player {
         }
     }
 
+    // TODO: 自機のx座標から右に +12 したところから射出するようハードコーディングしている
     public Bullet shoot() {
         return new Bullet(x + 12, y, 0);
+        // return new FastBullet(x + 12, y, 0);
     }
 
     public void draw(Graphics g) {
