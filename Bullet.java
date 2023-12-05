@@ -1,10 +1,13 @@
 import java.awt.*;
 
 public class Bullet {
+    boolean isPlayer;
+
     public int x,y;
     public int color;
     // blue:0,red:1,green:2
-    public Bullet(int x,int y,int color){
+    public Bullet(boolean ip, int x, int y, int color){
+        this.isPlayer=ip;
         this.x=x;
         this.y=y;
         this.color=color;
@@ -29,19 +32,21 @@ public class Bullet {
 
     // 弾の移動ロジック
     public void move() {
-        y -= 10;
+        if(isPlayer) y -= 10;
+        else y += 10;
     }
 
     // 画面外に出たかどうかを判定
     public boolean isOffScreen() {
-        return y < -10;
+        if(isPlayer) return y < -10;
+        else return y > 500;
     }
 }
 
 // 継承元のBulletクラスより三倍速く移動する弾丸を定義
 class FastBullet extends Bullet {
-    public FastBullet(int x, int y, int color) {
-        super(x, y, color);
+    public FastBullet(boolean ip, int x, int y, int color) {
+        super(ip, x, y, color);
     }
 
     @Override
