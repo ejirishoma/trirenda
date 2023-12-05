@@ -199,17 +199,6 @@ public class App{
                     }
                     if(playerInterval>0)playerInterval--;
 
-                    if(Keyboard.isKeyPressed(KeyEvent.VK_LEFT)&&playerX>0)playerX-=7;
-                    if(Keyboard.isKeyPressed(KeyEvent.VK_RIGHT)&&playerX<440)playerX+=7;
-                    if(Keyboard.isKeyPressed(KeyEvent.VK_UP)&&playerY>0)playerY-=7;
-                    if(Keyboard.isKeyPressed(KeyEvent.VK_DOWN)&&playerY<440)playerY+=7;
-
-                    if(Keyboard.isKeyPressed(KeyEvent.VK_SPACE)&&bulletInterval==0){
-                        bullets_player.add(new Bullet(playerX+12,playerY,playercolor));
-                        bulletInterval=7;
-                    }
-                    if(bulletInterval>0)bulletInterval--;
-
                     // 自機を上下左右へ移動する操作
                     if(Keyboard.isKeyPressed(KeyEvent.VK_LEFT)) player.moveLeft();
                     if(Keyboard.isKeyPressed(KeyEvent.VK_RIGHT)) player.moveRight();
@@ -217,9 +206,10 @@ public class App{
                     if(Keyboard.isKeyPressed(KeyEvent.VK_DOWN)) player.moveDown();
 
                     if(Keyboard.isKeyPressed(KeyEvent.VK_SPACE)&&bulletInterval==0){
-                        bullets_player.add(new Bullet(playerX+12,playerY,playercolor));
+                        bullets_player.add(player.shoot());
                         bulletInterval=7;
                     }
+                    if(bulletInterval>0)bulletInterval--;
 
                     // 画面下部のHPゲージの表示
                     gra.setColor(Color.RED);

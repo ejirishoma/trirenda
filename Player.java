@@ -40,6 +40,10 @@ public class Player {
         }
     }
 
+    public Bullet shoot() {
+        return new Bullet(x + 12, y, 0);
+    }
+
     public void draw(Graphics g) {
         g.setColor(Color.BLUE);
         g.fillRect(x, y, WIDTH, HEIGHT);
