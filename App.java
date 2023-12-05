@@ -162,13 +162,11 @@ public class App{
                     }
                     //敵の弾処理
                     for(int i=0;i<bullets_enemy.size();i++){
-                        Bullet bullet=bullets_enemy.get(i);
-                        if(bullet.color==0)gra.setColor(Color.BLUE);
-                        if(bullet.color==1)gra.setColor(Color.RED);
-                        if(bullet.color==2)gra.setColor(Color.GREEN);
-                        gra.fillRect(bullet.x,bullet.y,5,5);
-                        bullet.y+=10;
-                        if(bullet.y>500){
+                        Bullet bullet = bullets_enemy.get(i);
+                        bullet.draw(gra); // 弾の描画
+                        bullet.move(); // 弾の移動
+
+                        if (bullet.isOffScreen()) {
                             bullets_enemy.remove(i);
                             i--;
                         }
