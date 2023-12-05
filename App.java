@@ -105,17 +105,16 @@ public class App{
                     if(invincibleTime>0){
                         invincibleTime--;
                     }
-                    //自機の弾処理
+
+                    //自機が発射した弾の描画
                     for(int i=0;i<bullets_player.size();i++){
-                        Bullet bullet=bullets_player.get(i);
-                        if(bullet.color==0)gra.setColor(Color.BLUE);
-                        if(bullet.color==1)gra.setColor(Color.RED);
-                        if(bullet.color==2)gra.setColor(Color.GREEN);
-                        gra.fillRect(bullet.x,bullet.y,5,5);
-                        bullet.y-=10;
-                        if(bullet.y<-10){
+                        Bullet bullet = bullets_player.get(i);
+                        bullet.draw(gra); // 弾の描画
+                        bullet.move(); // 弾の移動
+
+                        if (bullet.isOffScreen()) {
                             bullets_player.remove(i);
-                            // i--;
+                            i--;
                         }
 
                         for(int j=0;j<enemies.size();j++){
