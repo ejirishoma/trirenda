@@ -117,6 +117,7 @@ public class App{
                             i--;
                         }
 
+                        // 弾丸と敵の衝突判定
                         for(int j=0;j<enemies.size();j++){
                             Enemy enemy =enemies.get(j);
                             if(bullet.x>=enemy.x&&bullet.x<=enemy.x+30&&bullet.y>=enemy.y&&bullet.y<=enemy.y+20){
@@ -128,12 +129,11 @@ public class App{
 
                     }
 
-
-
-                    // gra.setColor(Color.RED);
+                    // 画面上部のランダムな位置に敵を生成
                     if(random.nextInt(level<50?80-level:30)==1)enemies.add(new Enemy(random.nextInt(470),0,random.nextInt(3)));
 
                     for(int i=0;i<enemies.size();i++){
+                        // 敵の移動処理を描画
                         Enemy enemy =enemies.get(i);
                         if(enemy.color==0)gra.setColor(Color.BLUE);
                         if(enemy.color==1)gra.setColor(Color.RED);
@@ -145,6 +145,8 @@ public class App{
                             enemies.remove(i);
                             i--;
                         }
+
+                        // 自機と敵の衝突判定（自機が無敵状態なら判定しない）
                         if(invincibleTime==0&&((enemy.x>=playerX&&enemy.x<=playerX+30&&enemy.y>=playerY&&enemy.y<=playerY+20)||
                         (enemy.x+30>=playerX&&enemy.x+30<=playerX+30&&enemy.y+20>=playerY&&enemy.y+20<=playerY+20))){
                             playerHP--;
@@ -157,7 +159,9 @@ public class App{
                             // screen=EnumShootingScreen.GAMEOVER;
                             
                         }
-                        if(random.nextInt(40)==1)bullets_enemy.add(new Bullet(enemy.x+12,enemy.y,enemy.color));
+
+                        // 敵の射撃
+                        if(random.nextInt(40)==1)bullets_enemy.add(enemy.shoot());
                     }
                     //敵の弾処理
                     for(int i=0;i<bullets_enemy.size();i++){

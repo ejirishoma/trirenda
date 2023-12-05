@@ -5,4 +5,10 @@ public class Enemy {
         this.y=y;
         this.color=color;
     }
+
+    // TODO: 敵のx座標から右に +12 したところから射出するようハードコーディングしている
+    public Bullet shoot() {
+        return new Bullet(x + 12, y, color );
+        // return new FastBullet(x + 12, y, 0);
+    }
 }
