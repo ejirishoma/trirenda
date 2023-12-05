@@ -134,14 +134,11 @@ public class App{
 
                     for(int i=0;i<enemies.size();i++){
                         // 敵の移動処理を描画
-                        Enemy enemy =enemies.get(i);
-                        if(enemy.color==0)gra.setColor(Color.BLUE);
-                        if(enemy.color==1)gra.setColor(Color.RED);
-                        if(enemy.color==2)gra.setColor(Color.GREEN);
-                        gra.fillRect(enemy.x,enemy.y,30,10);
-                        gra.fillRect(enemy.x+10,enemy.y+10,10,10);
-                        enemy.y+=5;
-                        if(enemy.y>500){
+                        Enemy enemy = enemies.get(i);
+                        enemy.move();
+                        enemy.draw(gra);
+
+                        if (enemy.isOffScreen()) {
                             enemies.remove(i);
                             i--;
                         }
@@ -175,6 +172,8 @@ public class App{
                             bullets_enemy.remove(i);
                             i--;
                         }
+
+                        // 自機と敵の弾の衝突判定
                         if(invincibleTime==0&&bullet.x>=playerX&&bullet.x<=playerX+30&&bullet.y>=playerY&&bullet.y<=playerY+20&&(playercolor==bullet.color||playercolor==bullet.color+1||(playercolor==0&&bullet.color==2))){
                             if(playercolor==bullet.color){
                                 playerHP--;
