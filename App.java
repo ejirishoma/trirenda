@@ -13,9 +13,11 @@ import java.util.Random;
 
 public class App{
     public static ShootingFrame shootingFrame;
+    public static Stage stage;
     public static boolean loop;
     public static void main(String args[]){
         shootingFrame=new ShootingFrame();
+
         loop=true;
 
         Graphics gra=shootingFrame.panel.image.getGraphics();
@@ -28,22 +30,28 @@ public class App{
         int FPSCount=0;
         int score=0;
         int level=0;
+        int selectMode=-1;
         long levelTimer=0;
 
         Font font;
         FontMetrics metrics;
 
-        EnumShootingScreen screen=EnumShootingScreen.START;
+        EnumShootingScene scene=EnumShootingScene.TITLE;
 
         int playerX=0,playerY=0;
-        int bulletInterval=0,playerInterval=0;
+        int otherX=0,otherY=0;
+        int bulletInterval=0,playerInterval=0,otherInterval=0;
         int playercolor=0;
+        int othercolor=0;
         int playerHP=0;
+        int otherHP=0;
         int playerMAXHP=10;
-        int invincibleTime=0;
+        int otherMAXHP=10;
+        int PlayerinvincibleTime=0;
+        int OtherinvincibleTime=0;
         ArrayList<Bullet> bullets_player=new ArrayList<>();
-        ArrayList<Bullet> bullets_enemy=new ArrayList<>();
-        ArrayList<Enemy> enemies= new ArrayList<>();
+        ArrayList<Bullet> bullets_other=new ArrayList<>();
+        // ArrayList<Enemy> enemies= new ArrayList<>();
         Random random=new Random();
 
         int PowerupIs=0;
@@ -63,43 +71,162 @@ public class App{
 
             gra.fillRect(0,0,500,500);
 
-            switch(screen){
-                case START:
+            switch(scene){
+                case TITLE:
                     // ゲーム開始時の画面・ゲーム初期化
                     gra.setColor(Color.BLACK);
                     // gra.fillRect(100,100,100,40);
                     gra.setFont(new Font("SansSerif",Font.PLAIN,20));
                     gra.drawString("TORIRENDA", 30,80);
-                    gra.drawString("Please,push the space button!", 30,160);
+                    gra.drawString("Please,push the space button.", 30,160);
                     if(Keyboard.isKeyPressed(KeyEvent.VK_SPACE)){
-                        screen=EnumShootingScreen.GAME;
+                        scene=EnumShootingScene.START;
+                    }
+                    break;
+                case START:
+                //ゲーム開始
+                    // ゲーム開始時の画面・ゲーム初期化
+                    gra.setColor(Color.BLACK);
+                    // gra.fillRect(100,100,100,40);
+                    gra.setFont(new Font("SansSerif",Font.PLAIN,20));
+                    gra.drawString("TORIRENDA", 30,80);
+                    gra.drawString("Please,select the mode.", 30,160);
+                    // gra.drawString("SINGLE PLAY", 30,200);
+                    // gra.drawString("MULTI PLAY", 30,240);
+                    
+                    if(selectMode==-1){
+                        gra.drawString("SINGLE PLAY", 30,200);
+                        gra.drawString("MULTI PLAY", 30,240);
+                    }
+
+                    if(selectMode==0){
+                        gra.drawString("→SINGLE PLAY", 30,200);
+                        gra.drawString("MULTI PLAY", 30,240);
+                    }
+
+                    if(selectMode==1){
+                        gra.drawString("SINGLE PLAY", 30,200);
+                        gra.drawString("→MULTI PLAY", 30,240);
+                    }
+                    if(Keyboard.isKeyPressed(KeyEvent.VK_UP)){
+                        selectMode=0;
+                    }
+                    if(Keyboard.isKeyPressed(KeyEvent.VK_DOWN)){
+                        selectMode=1;
+                    }
+
+                    if(Keyboard.isKeyPressed(KeyEvent.VK_SPACE)&&selectMode==0){
+                        scene=EnumShootingScene.SINGLEPLAY;
                         bullets_player=new ArrayList<>();
-                        bullets_enemy=new ArrayList<>();
-                        enemies= new ArrayList<>();
+                        bullets_other=new ArrayList<>();
+                        // enemies= new ArrayList<>();
                         playerX=235;
                         playerY=400;
+                        otherX=235;
+                        otherY=50;
                         level=0;
                         score=0;
                         playerHP=playerMAXHP;
-                        invincibleTime=0;
+                        otherHP=otherMAXHP;
+                        PlayerinvincibleTime=0;
+                        OtherinvincibleTime=0;
+                        selectMode=-1;
                     }
+
+                    if(Keyboard.isKeyPressed(KeyEvent.VK_SPACE)&&selectMode==1){
+                        scene=EnumShootingScene.MULTIPLAY;
+                        bullets_player=new ArrayList<>();
+                        bullets_other=new ArrayList<>();
+                        // enemies= new ArrayList<>();
+                        playerX=235;
+                        playerY=400;
+                        otherX=235;
+                        otherY=50;
+                        level=0;
+                        score=0;
+                        playerHP=playerMAXHP;
+                        otherHP=otherMAXHP;
+                        PlayerinvincibleTime=0;
+                        OtherinvincibleTime=0;
+                        selectMode=-1;
+                    }
+                           
                     break;
-                case GAME:
-                //ゲーム開始 
-                if(System.currentTimeMillis()-levelTimer>10*1000){
-                    levelTimer=System.currentTimeMillis();
-                    level++;
-                }
+                case SINGLEPLAY:
+                    stage=new Stage(playerX,playerY,playerMAXHP,gra,shootingFrame);
+                    stage.run();
+                case MULTIPLAY:
+                    //対戦で実際に扱うところ
+                    //受信してこっちで処理を行って欲しい。
+
+                    //体力バー
+                    gra.setColor(Color.BLACK);
+                    for(int i=0;i<playerHP;i++){
+                        gra.fillRect(i*500/playerMAXHP,430,500/playerMAXHP,30);
+                    }
+
+                    gra.setColor(Color.BLACK);
+                    for(int i=0;i<otherHP;i++){
+                        gra.fillRect(i*500/otherMAXHP,0,500/otherMAXHP,30);
+                    }
+                    //ここまで
+
+                    // プレイヤーとその他との動きのプログラム、この部分を変更すれば切り替わる。
+                    //今はサンプルでランダムに動かすプログラムを入れてる。
+                    //playerX,Y:自機の座標,otherX,Y:相手の座標
+                    //playercolor:自機色,othercolor:相手色
+                    if(random.nextInt(40)==1)playercolor=random.nextInt(3);
+                    if(random.nextInt(40)==1)othercolor=random.nextInt(3);
+                    
+
+
+
+                    //random.nextInt(40)==1がtrueなら発砲
+                    if(random.nextInt(40)==1&&playerInterval==0){
+                        bullets_player.add(new Bullet(playerX+12,playerY,playercolor));
+                        playerInterval=7;
+                    }
+
+                    //random.nextInt(40)==1がtrueなら発砲
+                    if(random.nextInt(40)==1&&otherInterval==0){
+                        bullets_other.add(new Bullet(otherX+12,otherY,othercolor));
+                        otherInterval=7;
+                    }
+
+                    //自機(右，左，上，下)
+                    if(random.nextInt(10)==1&&playerX>0)playerX-=7;
+                    if(random.nextInt(10)==1&&playerX<440)playerX+=7;
+                    if(random.nextInt(10)==1&&playerY>0)playerY-=7;
+                    if(random.nextInt(10)==1&&playerY<440)playerY+=7;
+                    
+                    //相手(右，左，上，下)
+                    if(random.nextInt(10)==1&&otherX>0)otherX-=7;
+                    if(random.nextInt(10)==1&&otherX<440)otherX+=7;
+                    if(random.nextInt(10)==1&&otherY>0)otherY-=7;
+                    if(random.nextInt(10)==1&&otherY<440)otherY+=7;
+
+                    //コメントアウト外せば操作出来るようになる
+                    // if(Keyboard.isKeyPressed(KeyEvent.VK_LEFT)&&playerX>0)playerX-=7;
+                    // if(Keyboard.isKeyPressed(KeyEvent.VK_RIGHT)&&playerX<440)playerX+=7;
+                    // if(Keyboard.isKeyPressed(KeyEvent.VK_UP)&&playerY>0)playerY-=7;
+                    // if(Keyboard.isKeyPressed(KeyEvent.VK_DOWN)&&playerY<440)playerY+=7;
+                    
+                    
+                    //ここから先ゲームの処理
+
+                    if(playerInterval>0)playerInterval--;
+                    if(otherInterval>0)otherInterval--;
+
                     if(playercolor==0)gra.setColor(Color.BLUE);
                     if(playercolor==1)gra.setColor(Color.RED);
                     if(playercolor==2)gra.setColor(Color.GREEN);
-                    if(invincibleTime==0||(invincibleTime%8==0&&invincibleTime>0)){
+                    if(PlayerinvincibleTime==0||(PlayerinvincibleTime%8==0&&PlayerinvincibleTime>0)){
                         gra.fillRect(playerX+10,playerY,10,10);
                         gra.fillRect(playerX,playerY+10,30,10);
                         
                     }
-                    if(invincibleTime>0){
-                        invincibleTime--;
+                    if(PlayerinvincibleTime>0){
+                        PlayerinvincibleTime--;
                     }
                     //自機の弾処理
                     for(int i=0;i<bullets_player.size();i++){
@@ -113,123 +240,92 @@ public class App{
                             bullets_player.remove(i);
                             // i--;
                         }
-
-                        for(int j=0;j<enemies.size();j++){
-                            Enemy enemy =enemies.get(j);
-                            if(bullet.x>=enemy.x&&bullet.x<=enemy.x+30&&bullet.y>=enemy.y&&bullet.y<=enemy.y+20){
-                                enemies.remove(j);
-                                score+=10;
+                        if(OtherinvincibleTime==0&&bullet.x>=otherX&&bullet.x<=otherX+30&&bullet.y>=otherY&&bullet.y<=otherY+20&&(othercolor==bullet.color||othercolor==bullet.color+1||(othercolor==0&&bullet.color==2))){
+                            if(othercolor==bullet.color){
+                                otherHP--;
                             }
-                        }
-
-
-                    }
-
-
-
-                    // gra.setColor(Color.RED);
-                    if(random.nextInt(level<50?80-level:30)==1)enemies.add(new Enemy(random.nextInt(470),0,random.nextInt(3)));
-
-                    for(int i=0;i<enemies.size();i++){
-                        Enemy enemy =enemies.get(i);
-                        if(enemy.color==0)gra.setColor(Color.BLUE);
-                        if(enemy.color==1)gra.setColor(Color.RED);
-                        if(enemy.color==2)gra.setColor(Color.GREEN);
-                        gra.fillRect(enemy.x,enemy.y,30,10);
-                        gra.fillRect(enemy.x+10,enemy.y+10,10,10);
-                        enemy.y+=5;
-                        if(enemy.y>500){
-                            enemies.remove(i);
-                            i--;
-                        }
-                        if(invincibleTime==0&&((enemy.x>=playerX&&enemy.x<=playerX+30&&enemy.y>=playerY&&enemy.y<=playerY+20)||
-                        (enemy.x+30>=playerX&&enemy.x+30<=playerX+30&&enemy.y+20>=playerY&&enemy.y+20<=playerY+20))){
-                            playerHP--;
-                            invincibleTime=100;
-                            enemies.remove(i);
-                            if(playerHP<=0){
-                                screen=EnumShootingScreen.GAMEOVER;
-                                score+=(level-1)*100;
+                            if(othercolor==bullet.color+1||(othercolor==0&&bullet.color==2)){
+                                otherHP-=5;
                             }
-                            // screen=EnumShootingScreen.GAMEOVER;
-                            
-                        }
-                        if(random.nextInt(40)==1)bullets_enemy.add(new Bullet(enemy.x+12,enemy.y,enemy.color));
-                    }
-                    //敵の弾処理
-                    for(int i=0;i<bullets_enemy.size();i++){
-                        Bullet bullet=bullets_enemy.get(i);
-                        if(bullet.color==0)gra.setColor(Color.BLUE);
-                        if(bullet.color==1)gra.setColor(Color.RED);
-                        if(bullet.color==2)gra.setColor(Color.GREEN);
-                        gra.fillRect(bullet.x,bullet.y,5,5);
-                        bullet.y+=10;
-                        if(bullet.y>500){
-                            bullets_enemy.remove(i);
-                            i--;
-                        }
-                        if(invincibleTime==0&&bullet.x>=playerX&&bullet.x<=playerX+30&&bullet.y>=playerY&&bullet.y<=playerY+20&&(playercolor==bullet.color||playercolor==bullet.color+1||(playercolor==0&&bullet.color==2))){
-                            if(playercolor==bullet.color){
-                                playerHP--;
-                            }
-                            if(playercolor==bullet.color+1||(playercolor==0&&bullet.color==2)){
-                                playerHP-=5;
-                            }
-                            invincibleTime=100;
-                            bullets_enemy.remove(i);
-                            if(playerHP<=0){
-                                screen=EnumShootingScreen.GAMEOVER;
-                                score+=(level-1)*100;
+                            OtherinvincibleTime=100;
+                            bullets_player.remove(i);
+                            if(otherHP<=0){
+                                scene=EnumShootingScene.PLAYERWIN;
                             }
                             
                         }
                     }
-                    //色変え処理
-                    // if(Keyboard.isKeyPressed(KeyEvent.VK_X)&&playercolor==0)playercolor=1;
-                    // if(Keyboard.isKeyPressed(KeyEvent.VK_V)&&playercolor==1)playercolor=2;
-                    // if(Keyboard.isKeyPressed(KeyEvent.VK_V)&&playercolor==2)playercolor=0;
-                    if(Keyboard.isKeyPressed(KeyEvent.VK_V)&&playerInterval==0){
-                        playercolor+=1;
-                        if(playercolor==3)playercolor=0;
-                        playerInterval=10;
-                    }
-                    if(playerInterval>0)playerInterval--;
-
-                    if(Keyboard.isKeyPressed(KeyEvent.VK_LEFT)&&playerX>0)playerX-=7;
-                    if(Keyboard.isKeyPressed(KeyEvent.VK_RIGHT)&&playerX<440)playerX+=7;
-                    if(Keyboard.isKeyPressed(KeyEvent.VK_UP)&&playerY>0)playerY-=7;
-                    if(Keyboard.isKeyPressed(KeyEvent.VK_DOWN)&&playerY<440)playerY+=7;
 
                     if(Keyboard.isKeyPressed(KeyEvent.VK_SPACE)&&bulletInterval==0){
                         bullets_player.add(new Bullet(playerX+12,playerY,playercolor));
                         bulletInterval=7;
                     }
                     if(bulletInterval>0)bulletInterval--;
-                    gra.setColor(Color.RED);
-                    for(int i=0;i<playerHP;i++){
-                        gra.fillRect(i*500/playerMAXHP,430,500/playerMAXHP,30);
+
+
+
+                    if(othercolor==0)gra.setColor(Color.BLUE);
+                    if(othercolor==1)gra.setColor(Color.RED);
+                    if(othercolor==2)gra.setColor(Color.GREEN);
+                    if(OtherinvincibleTime==0||(OtherinvincibleTime%8==0&&OtherinvincibleTime>0)){
+                        gra.fillRect(otherX+10,otherY+10,10,10);
+                        gra.fillRect(otherX,otherY,30,10);
                     }
-                    {
-                        gra.setColor(Color.BLACK);
-                        font =new Font("SansSerif",Font.PLAIN,20);
-                        metrics=gra.getFontMetrics(font);
-                        gra.setFont(font);
-                        gra.drawString("SCORE:"+score, 470-metrics.stringWidth("SCORE:"+score),430);
-                        gra.drawString("LEVEL:"+level, 470-metrics.stringWidth("LEVEL:"+level),460);
+                    if(OtherinvincibleTime>0){
+                        OtherinvincibleTime--;
+                    }
+
+
+                    //相手の弾処理
+                    for(int i=0;i<bullets_other.size();i++){
+                        Bullet bullet=bullets_other.get(i);
+                        if(bullet.color==0)gra.setColor(Color.BLUE);
+                        if(bullet.color==1)gra.setColor(Color.RED);
+                        if(bullet.color==2)gra.setColor(Color.GREEN);
+                        gra.fillRect(bullet.x,bullet.y,5,5);
+                        bullet.y+=10;
+                        if(bullet.y>500){
+                            bullets_other.remove(i);
+                            // i--;
+                        }
+                        if(PlayerinvincibleTime==0&&bullet.x>=playerX&&bullet.x<=playerX+30&&bullet.y>=playerY&&bullet.y<=playerY+20&&(playercolor==bullet.color||playercolor==bullet.color+1||(playercolor==0&&bullet.color==2))){
+                            if(playercolor==bullet.color){
+                                playerHP--;
+                            }
+                            if(playercolor==bullet.color+1||(playercolor==0&&bullet.color==2)){
+                                playerHP-=5;
+                            }
+                            PlayerinvincibleTime=100;
+                            bullets_other.remove(i);
+                            if(playerHP<=0){
+                                scene=EnumShootingScene.OTHERWIN;
+                            }
+                            
+                        }
                     }
 
                     
 
                     break;
-                case GAMEOVER:
+                case PLAYERWIN:
                     gra.setColor(Color.BLACK);
                     // gra.fillRect(100,100,100,40);
                     gra.setFont(new Font("SansSerif",Font.PLAIN,20));
-                    gra.drawString("GAME OVER!!!", 30,80);
-                    gra.drawString("SCORE:"+score, 30,120);
+                    gra.drawString("PLAYER1 WIN!!!", 30,80);
+                    // gra.drawString("SCORE:"+score, 30,120);
                     gra.drawString("Please,push the ESC button to return the title!", 30,160);
                     if(Keyboard.isKeyPressed(KeyEvent.VK_ESCAPE)){
-                        screen=EnumShootingScreen.START;
+                        scene=EnumShootingScene.TITLE;
+                    }
+                    break;
+                case OTHERWIN:
+                    gra.setColor(Color.BLACK);
+                    // gra.fillRect(100,100,100,40);
+                    gra.setFont(new Font("SansSerif",Font.PLAIN,20));
+                    gra.drawString("PLAYER2 WIN!!!", 30,80);
+                    gra.drawString("Please,push the ESC button to return the title!", 30,160);
+                    if(Keyboard.isKeyPressed(KeyEvent.VK_ESCAPE)){
+                        scene=EnumShootingScene.TITLE;
                     }
                     break;
             }
