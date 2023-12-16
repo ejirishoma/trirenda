@@ -44,7 +44,7 @@ public class App{
         ArrayList<Bullet> bullets_player=new ArrayList<>();
         ArrayList<Bullet> bullets_enemy=new ArrayList<>();
         ArrayList<Enemy> enemies= new ArrayList<>();
-        Player player = new Player(300, 300);
+        Player player = new Player(300, 300, playercolor);
         Random random=new Random();
 
         int PowerupIs=0;
@@ -92,6 +92,8 @@ public class App{
                     levelTimer=System.currentTimeMillis();
                     level++;
                 }
+
+                    // 塗る色の初期化
                     if(playercolor==0)gra.setColor(Color.BLUE);
                     if(playercolor==1)gra.setColor(Color.RED);
                     if(playercolor==2)gra.setColor(Color.GREEN);
@@ -102,6 +104,8 @@ public class App{
                         gra.fillRect(playerX,playerY+10,30,10);
                         
                     }
+
+                    // 無敵時間の減少処理
                     if(invincibleTime>0){
                         invincibleTime--;
                     }
@@ -188,13 +192,10 @@ public class App{
                             
                         }
                     }
+
                     //色変え処理
-                    // if(Keyboard.isKeyPressed(KeyEvent.VK_X)&&playercolor==0)playercolor=1;
-                    // if(Keyboard.isKeyPressed(KeyEvent.VK_V)&&playercolor==1)playercolor=2;
-                    // if(Keyboard.isKeyPressed(KeyEvent.VK_V)&&playercolor==2)playercolor=0;
                     if(Keyboard.isKeyPressed(KeyEvent.VK_V)&&playerInterval==0){
-                        playercolor+=1;
-                        if(playercolor==3)playercolor=0;
+                        player.changeColor();
                         playerInterval=10;
                     }
                     if(playerInterval>0)playerInterval--;
