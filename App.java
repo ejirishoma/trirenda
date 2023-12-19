@@ -35,7 +35,6 @@ public class App{
 
         EnumShootingScreen screen=EnumShootingScreen.START;
 
-        int playerX=0,playerY=0;
         int bulletInterval=0,playerInterval=0;
         int playercolor=0;
         int playerHP=0;
@@ -44,7 +43,7 @@ public class App{
         ArrayList<Bullet> bullets_player=new ArrayList<>();
         ArrayList<Bullet> bullets_enemy=new ArrayList<>();
         ArrayList<Enemy> enemies= new ArrayList<>();
-        Player player = new Player(300, 300, playercolor);
+        Player player = new Player(235, 400, playercolor);
         Random random=new Random();
 
         int PowerupIs=0;
@@ -78,8 +77,6 @@ public class App{
                         bullets_player=new ArrayList<>();
                         bullets_enemy=new ArrayList<>();
                         enemies= new ArrayList<>();
-                        playerX=235;
-                        playerY=400;
                         level=0;
                         score=0;
                         playerHP=playerMAXHP;
@@ -141,8 +138,8 @@ public class App{
                         }
 
                         // 自機と敵の衝突判定（自機が無敵状態なら判定しない）
-                        if(invincibleTime==0&&((enemy.x>=playerX&&enemy.x<=playerX+30&&enemy.y>=playerY&&enemy.y<=playerY+20)||
-                        (enemy.x+30>=playerX&&enemy.x+30<=playerX+30&&enemy.y+20>=playerY&&enemy.y+20<=playerY+20))){
+                        if(invincibleTime==0&&((enemy.x>=player.x&&enemy.x<=player.x+30&&enemy.y>=player.y&&enemy.y<=player.y+20)||
+                        (enemy.x+30>=player.x&&enemy.x+30<=player.x+30&&enemy.y+20>=player.y&&enemy.y+20<=player.y+20))){
                             playerHP--;
                             invincibleTime=100;
                             enemies.remove(i);
@@ -169,7 +166,7 @@ public class App{
                         }
 
                         // 自機と敵の弾の衝突判定
-                        if(invincibleTime==0&&bullet.x>=playerX&&bullet.x<=playerX+30&&bullet.y>=playerY&&bullet.y<=playerY+20&&(playercolor==bullet.color||playercolor==bullet.color+1||(playercolor==0&&bullet.color==2))){
+                        if(invincibleTime==0&&bullet.x>=player.x&&bullet.x<=player.x+30&&bullet.y>=player.y&&bullet.y<=player.y+20&&(playercolor==bullet.color||playercolor==bullet.color+1||(playercolor==0&&bullet.color==2))){
                             if(playercolor==bullet.color){
                                 playerHP--;
                             }
