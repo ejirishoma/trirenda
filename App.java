@@ -98,13 +98,6 @@ public class App{
                     if(playercolor==1)gra.setColor(Color.RED);
                     if(playercolor==2)gra.setColor(Color.GREEN);
 
-                    // 被弾した際に自機が点滅するよう描画
-                    if(invincibleTime==0||(invincibleTime%8==0&&invincibleTime>0)){
-                        gra.fillRect(playerX+10,playerY,10,10);
-                        gra.fillRect(playerX,playerY+10,30,10);
-                        
-                    }
-
                     // 無敵時間の減少処理
                     if(invincibleTime>0){
                         invincibleTime--;
@@ -250,7 +243,7 @@ public class App{
             gra.setFont(new Font("SansSerif",Font.PLAIN,10));
             gra.drawString(FPS+"FPS", 0,450);
 
-            player.draw(gra);
+            player.draw(gra, invincibleTime);
             shootingFrame.panel.draw();
             try{
                 long runTime=System.currentTimeMillis()-startTime;

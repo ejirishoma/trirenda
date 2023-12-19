@@ -2,7 +2,7 @@ import java.awt.*;
 
 public class Player {
     // 自機の位置
-    private int x, y, color;
+    public int x, y, color;
 
     // 自機の大きさ
     final static int WIDTH = 20;
@@ -52,7 +52,9 @@ public class Player {
         if(color==3)color=0;
     }
 
-    public void draw(Graphics g) {
+    public void draw(Graphics g, int invincibleTime) {
+        if (invincibleTime > 0 && invincibleTime % 8 != 0) return;
+
         switch (color) {
             case 0:
                 g.setColor(Color.BLUE);
