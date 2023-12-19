@@ -66,6 +66,8 @@ public class Player {
             default:
                 g.setColor(Color.BLACK);
         }
-        g.fillRect(x, y, WIDTH, HEIGHT);
+
+        g.fillRect(x+10,y,10,10);
+        g.fillRect(x,y+10,30,10);
     }
 }
