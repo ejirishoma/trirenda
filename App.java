@@ -166,11 +166,11 @@ public class App{
                         }
 
                         // 自機と敵の弾の衝突判定
-                        if(invincibleTime==0&&bullet.x>=player.x&&bullet.x<=player.x+30&&bullet.y>=player.y&&bullet.y<=player.y+20&&(playercolor==bullet.color||playercolor==bullet.color+1||(playercolor==0&&bullet.color==2))){
-                            if(playercolor==bullet.color){
+                        if(invincibleTime==0&&bullet.x>=player.x&&bullet.x<=player.x+30&&bullet.y>=player.y&&bullet.y<=player.y+20&&(player.color==bullet.color||player.color==bullet.color+1||(player.color==0&&bullet.color==2))){
+                            if(player.color==bullet.color){
                                 playerHP--;
                             }
-                            if(playercolor==bullet.color+1||(playercolor==0&&bullet.color==2)){
+                            if(player.color==bullet.color+1||(player.color==0&&bullet.color==2)){
                                 playerHP-=5;
                             }
                             invincibleTime=100;
