@@ -124,7 +124,7 @@ public class App{
                     }
 
                     // 画面上部のランダムな位置に敵を生成
-                    if(random.nextInt(level<50?80-level:30)==1)enemies.add(new Enemy(random.nextInt(470),0,random.nextInt(3)));
+                    if(random.nextInt(level<50?80-level:30)==1)enemies.add(new SwingEnemy(random.nextInt(470),0,random.nextInt(3)));
 
                     for(int i=0;i<enemies.size();i++){
                         // 敵の移動処理を描画

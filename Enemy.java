@@ -43,3 +43,37 @@ public class Enemy {
         // return new FastBullet(x + 12, y, 0);
     }
 }
+
+class FastEnemy extends Enemy {
+    public FastEnemy(int x, int y, int color) {
+        super(x, y, color);
+    }
+
+    @Override
+    public void move() { y += 30; }
+}
+
+
+class SwingEnemy extends Enemy {
+    public SwingEnemy(int x, int y, int color) {
+        super(x, y, color);
+    }
+
+    int cnt = 0;
+
+    @Override
+    public void move() {
+        if(cnt % 2== 0) {
+            x += 2;
+        }
+        else {
+            y += 4;
+        }
+        cnt++;
+    }
+
+    @Override
+    public Bullet shoot() {
+        return new FastBullet(false, x + 12, y, color );
+    }
+}

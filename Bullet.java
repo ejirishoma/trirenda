@@ -51,6 +51,6 @@ class FastBullet extends Bullet {
 
     @Override
     public void move() {
-        y -= 30;
+        y += 30;
     }
 }
