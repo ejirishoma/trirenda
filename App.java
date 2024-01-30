@@ -37,7 +37,6 @@ public class App{
 
         int bulletInterval=0,playerInterval=0;
         int playercolor=0;
-        int playerHP=0;
         int playerMAXHP=10;
         int invincibleTime=0;
         ArrayList<Bullet> bullets_player=new ArrayList<>();
@@ -79,7 +78,7 @@ public class App{
                         enemies= new ArrayList<>();
                         level=0;
                         score=0;
-                        playerHP=playerMAXHP;
+                        player.HP=playerMAXHP;
                         invincibleTime=0;
                     }
                     break;
@@ -124,7 +123,7 @@ public class App{
                     }
 
                     // 画面上部のランダムな位置に敵を生成
-                    if(random.nextInt(level<50?80-level:30)==1)enemies.add(new SwingEnemy(random.nextInt(470),0,random.nextInt(3)));
+                    if(random.nextInt(level<50?80-level:30)==1)enemies.add(new Enemy(random.nextInt(470),0,random.nextInt(3)));
 
                     for(int i=0;i<enemies.size();i++){
                         // 敵の移動処理を描画
@@ -140,10 +139,10 @@ public class App{
                         // 自機と敵の衝突判定（自機が無敵状態なら判定しない）
                         if(invincibleTime==0&&((enemy.x>=player.x&&enemy.x<=player.x+30&&enemy.y>=player.y&&enemy.y<=player.y+20)||
                         (enemy.x+30>=player.x&&enemy.x+30<=player.x+30&&enemy.y+20>=player.y&&enemy.y+20<=player.y+20))){
-                            playerHP--;
+                            player.HP--;
                             invincibleTime=100;
                             enemies.remove(i);
-                            if(playerHP<=0){
+                            if(player.HP<=0){
                                 screen=EnumShootingScreen.GAMEOVER;
                                 score+=(level-1)*100;
                             }
@@ -168,14 +167,14 @@ public class App{
                         // 自機と敵の弾の衝突判定
                         if(invincibleTime==0&&bullet.x>=player.x&&bullet.x<=player.x+30&&bullet.y>=player.y&&bullet.y<=player.y+20&&(player.color==bullet.color||player.color==bullet.color+1||(player.color==0&&bullet.color==2))){
                             if(player.color==bullet.color){
-                                playerHP--;
+                                player.HP--;
                             }
                             if(player.color==bullet.color+1||(player.color==0&&bullet.color==2)){
-                                playerHP-=5;
+                                player.HP-=5;
                             }
                             invincibleTime=100;
                             bullets_enemy.remove(i);
-                            if(playerHP<=0){
+                            if(player.HP<=0){
                                 screen=EnumShootingScreen.GAMEOVER;
                                 score+=(level-1)*100;
                             }
@@ -204,7 +203,7 @@ public class App{
 
                     // 画面下部のHPゲージの表示
                     gra.setColor(Color.RED);
-                    for(int i=0;i<playerHP;i++){
+                    for(int i=0;i<player.HP;i++){
                         gra.fillRect(i*500/playerMAXHP,430,500/playerMAXHP,30);
                     }
                     {

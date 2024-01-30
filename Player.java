@@ -2,7 +2,7 @@ import java.awt.*;
 
 public class Player {
     // 自機の位置
-    public int x, y, color;
+    public int x, y, color, HP;
 
     // 自機の大きさ
     final static int WIDTH = 20;
