@@ -5,17 +5,26 @@
     
 // }
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.awt.image.BufferedImage;
 public class App{
     public static ShootingFrame shootingFrame;
     public static Stage stage;
     public static boolean loop;
-    public static void main(String args[]){
+    public static void main(String args[])throws IOException{
         shootingFrame=new ShootingFrame();
 
         loop=true;
@@ -32,7 +41,6 @@ public class App{
         int level=0;
         int selectMode=-1;
         long levelTimer=0;
-
         Font font;
         FontMetrics metrics;
 
@@ -55,7 +63,16 @@ public class App{
         Random random=new Random();
 
         int PowerupIs=0;
-        
+        // Image img=
+
+        File cat=new File("./src/cat.png");
+        BufferedImage img = ImageIO.read(cat);
+
+        // BufferedImage img = ImageIO.read(new File("C:\\Users\\ejiri\\OneDrive\\デスクトップ\\Torirenda\\src\\cat.png"));
+        // BufferedImage img = ImageIO.read(new File("\\WEB-INF\\cat.png"));
+        BufferedImage simg = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
+        simg.createGraphics().drawImage(img.getScaledInstance(200, 200, Image.SCALE_AREA_AVERAGING),0, 0, 200, 200, null);
+        // BufferedImage img = ImageIO.read(new File("./cat.png"));
         
         while(loop){
             if(System.currentTimeMillis()-fpsTime>=1000){
@@ -70,6 +87,7 @@ public class App{
             gra.setColor(Color.WHITE);
 
             gra.fillRect(0,0,500,500);
+            gra.drawImage(simg, 280,260,null);
 
             switch(scene){
                 case TITLE:
@@ -155,6 +173,7 @@ public class App{
                 case SINGLEPLAY:
                     stage=new Stage(playerX,playerY,playerMAXHP,gra,shootingFrame);
                     stage.run();
+                    scene=EnumShootingScene.GAMEOVER;
                 case MULTIPLAY:
                     //対戦で実際に扱うところ
                     //受信してこっちで処理を行って欲しい。
@@ -323,6 +342,16 @@ public class App{
                     // gra.fillRect(100,100,100,40);
                     gra.setFont(new Font("SansSerif",Font.PLAIN,20));
                     gra.drawString("PLAYER2 WIN!!!", 30,80);
+                    gra.drawString("Please,push the ESC button to return the title!", 30,160);
+                    if(Keyboard.isKeyPressed(KeyEvent.VK_ESCAPE)){
+                        scene=EnumShootingScene.TITLE;
+                    }
+                    break;
+                case GAMEOVER:
+                    gra.setColor(Color.BLACK);
+                    // gra.fillRect(100,100,100,40);
+                    gra.setFont(new Font("SansSerif",Font.PLAIN,20));
+                    gra.drawString("GAMEOVER!", 30,80);
                     gra.drawString("Please,push the ESC button to return the title!", 30,160);
                     if(Keyboard.isKeyPressed(KeyEvent.VK_ESCAPE)){
                         scene=EnumShootingScene.TITLE;
