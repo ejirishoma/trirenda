@@ -82,16 +82,26 @@ class SwingBullet extends Bullet {
 
     @Override
     public void move(int playerX, int playerY) {
-        if (y >= playerY){
-            y += Math.abs((int)(y - playerY)/(Math.sqrt(Math.pow(x-playerX, 2)+Math.pow(y-playerY, 2))));
+        if (y > playerY){
+            y+=5;
+            // y -=(int)((y - playerY)*7/(Math.sqrt(Math.pow(x-playerX, 2)+Math.pow(y-playerY, 2))));
+        }else if(y <= playerY){
+            y+=1;
+            // y += (int)((playerY-y)*7/(Math.sqrt(Math.pow(x-playerX, 2)+Math.pow(y-playerY, 2))));
         }
-        y+=3;
+        // y+=3;
+        // System.out.println((Math.sqrt(Math.pow(x-playerX, 2)+Math.pow(y-playerY, 2))));
+        // System.out.println(y);
  
         if(x > playerX){
-            x -= (int)(x - playerX)/(Math.sqrt(Math.pow(x-playerX, 2)+Math.pow(y-playerY, 2)));
+            // x-=1;
+            x -=(int)((x - playerX)*5/(Math.sqrt(Math.pow(x-playerX, 2)+Math.pow(y-playerY, 2))));
+            // x -= (int)((x - playerX)/(Math.sqrt(Math.pow(x-playerX, 2)+Math.pow(y-playerY, 2))));
         }
         else if(x <= playerX){
-            x += Math.abs((int)(x - playerX)/(Math.sqrt(Math.pow(x-playerX, 2)+Math.pow(y-playerY, 2))));
+            x+=1;
+            x += (int)((playerX-x)*5/(Math.sqrt(Math.pow(x-playerX, 2)+Math.pow(y-playerY, 2))));
+            // x += (int)(Math.abs(playerX-x))/(Math.sqrt(Math.pow(x-playerX, 2)+Math.pow(y-playerY, 2)));
         }
     }
 }

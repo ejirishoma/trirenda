@@ -62,6 +62,8 @@ public class App{
         // ArrayList<Enemy> enemies= new ArrayList<>();
         Random random=new Random();
 
+        // TCPClient client= new TCPClient();
+        // client.net("a","a","a","a","a");
         int PowerupIs=0;
         // Image img=
 
@@ -75,6 +77,7 @@ public class App{
         // BufferedImage img = ImageIO.read(new File("./cat.png"));
         
         while(loop){
+            // client.net("a","a","a","a","a");
             if(System.currentTimeMillis()-fpsTime>=1000){
                 fpsTime=System.currentTimeMillis();
                 FPS=FPSCount;

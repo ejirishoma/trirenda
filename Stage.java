@@ -72,7 +72,7 @@ public class Stage {
         player.HP=playerMAXHP;
         // ArrayList<Enemy> enemies= new ArrayList<>();
         Random random=new Random();
-        File f=new File("./src/stage_temp.csv");
+        File f=new File("./src/purotoku3.csv");
         BufferedReader br = new BufferedReader(new FileReader(f));
         String line;
         int[][] stage_map=new int[6000][5];
@@ -82,10 +82,10 @@ public class Stage {
         line = br.readLine();
         while ((line = br.readLine()) != null) {
             String[] data = line.split(",", 0);
-            System.out.print(data[0] + ",");
-            System.out.print(data[1] + ",");
-            System.out.print(data[2] + ",");
-            System.out.println(data[3]);
+            // System.out.print(data[0] + ",");
+            // System.out.print(data[1] + ",");
+            // System.out.print(data[2] + ",");
+            // System.out.println(data[3]);
             
             for(int i=0;i<data.length;i++){
                 
@@ -189,6 +189,7 @@ public class Stage {
             for(int i=0;i<bullets_player.size();i++){
                 Bullet bullet=bullets_player.get(i);
                 bullet.draw(gra); // 弾の描画
+                
                 bullet.move(player.x, player.y); // 弾の移動
 
                 if (bullet.isOffScreen()) {
@@ -297,7 +298,7 @@ public class Stage {
             //敵の弾処理
             for(int i=0;i<bullets_enemy.size();i++){
                 Bullet bullet=bullets_enemy.get(i);
-                System.out.println(bullet);
+                // System.out.println(bullet);
                 bullet.draw(gra); // 弾の描画
                 bullet.move(player.x, player.y); // 弾の移動
 
