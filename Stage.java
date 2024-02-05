@@ -189,7 +189,7 @@ public class Stage {
             for(int i=0;i<bullets_player.size();i++){
                 Bullet bullet=bullets_player.get(i);
                 bullet.draw(gra); // 弾の描画
-                bullet.move(); // 弾の移動
+                bullet.move(player.x, player.y); // 弾の移動
 
                 if (bullet.isOffScreen()) {
                     bullets_player.remove(i);
@@ -229,7 +229,18 @@ public class Stage {
                 
                 while(stage_time==stage_map[enemyindex][0]){
                     if(String.valueOf(stage_map[enemyindex][0])!=null){
-                        enemies.add(new Enemy(stage_map[enemyindex][1],stage_map[enemyindex][2],stage_map[enemyindex][4]));
+
+                        if(stage_map[enemyindex][3] == 0){
+                            enemies.add(new mobEnemy(stage_map[enemyindex][1],stage_map[enemyindex][2],stage_map[enemyindex][3],stage_map[enemyindex][4]));
+                        }
+
+                        else if(stage_map[enemyindex][3] == 1){
+                            enemies.add(new FastEnemy(stage_map[enemyindex][1],stage_map[enemyindex][2],stage_map[enemyindex][3],stage_map[enemyindex][4]));
+                        }
+
+                        else if(stage_map[enemyindex][3] == 2){
+                            enemies.add(new SwingEnemy(stage_map[enemyindex][1],stage_map[enemyindex][2],stage_map[enemyindex][3],stage_map[enemyindex][4]));
+                        }
                         enemyindex++;
                     }
                 }
@@ -244,6 +255,7 @@ public class Stage {
             
             for(int i=0;i<enemies.size();i++){
                 Enemy enemy =enemies.get(i);
+                //System.out.println(enemy);
                 enemy.move();
                 enemy.draw(gra);
                 // if(enemy.color==0)gra.setColor(Color.BLUE);
@@ -269,13 +281,25 @@ public class Stage {
                     // screen=EnumShootingScreen.GAMEOVER;
                     
                 }
-                if(random.nextInt(40)==1)bullets_enemy.add(new Bullet(false,enemy.x+12,enemy.y,enemy.color));
+                if(random.nextInt(40)==1){
+                    if(enemy.enemy == 0){
+                        bullets_enemy.add(new mobBullet(false,enemy.x+12,enemy.y,enemy.color));
+                    }
+                    else if(enemy.enemy == 1){
+                        bullets_enemy.add(new FastBullet(false,enemy.x+12,enemy.y,enemy.color));
+                    }
+                    else if(enemy.enemy == 2){
+                        bullets_enemy.add(new SwingBullet(false,enemy.x+12,enemy.y,enemy.color));
+                    }
+                }
             }
+
             //敵の弾処理
             for(int i=0;i<bullets_enemy.size();i++){
                 Bullet bullet=bullets_enemy.get(i);
+                System.out.println(bullet);
                 bullet.draw(gra); // 弾の描画
-                bullet.move(); // 弾の移動
+                bullet.move(player.x, player.y); // 弾の移動
 
                 if (bullet.isOffScreen()) {
                     bullets_enemy.remove(i);

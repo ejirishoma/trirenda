@@ -10,10 +10,11 @@
 import java.awt.*;
 
 public class Enemy {
-    public int x,y,color;
-    public Enemy(int x,int y,int color){
+    public int x,y,enemy,color;
+    public Enemy(int x,int y,int enemy, int color){
         this.x=x;
         this.y=y;
+        this.enemy = enemy;
         this.color=color;
     }
 
@@ -47,42 +48,58 @@ public class Enemy {
 
 
     // TODO: 敵のx座標から右に +12 したところから射出するようハードコーディングしている
-    public Bullet shoot() {
-        return new Bullet(false, x + 12, y, color );
+    //public Bullet shoot() {
+    //    return new Bullet(false, x + 12, y, color );
         // return new FastBullet(x + 12, y, 0);
+    //}
+    
+}
+
+class mobEnemy extends Enemy {
+    public mobEnemy(int x, int y, int enemy, int color) {
+        super(x, y, enemy, color);
+    }
+
+    // @Override
+    public Bullet mobBullet() {
+        return new mobBullet(false, x + 12, y, color );
     }
 }
 
 class FastEnemy extends Enemy {
-    public FastEnemy(int x, int y, int color) {
-        super(x, y, color);
+    public FastEnemy(int x, int y, int enemy, int color) {
+        super(x, y, enemy, color);
     }
 
-    // @Override
-    public void move() { y += 30; }
+    public Bullet FastBullet() {
+        return new FastBullet(false, x + 12, y, color);
+    }
+
+    @Override
+    public void move() { y += 8; }
 }
 
 
 class SwingEnemy extends Enemy {
-    public SwingEnemy(int x, int y, int color) {
-        super(x, y, color);
+    public SwingEnemy(int x, int y, int enemy, int color) {
+        super(x, y, enemy, color);
     }
 
-    int cnt = 0;
+    //int cnt = 0;
 
     // @Override
-    public void move() {
-        if(cnt % 2== 0) {
-            x += 2;
-        }
-        else {
-            y += 4;
-        }
-        cnt++;
-    }
+    //public void move() {
+    //    if(cnt % 2== 0) {
+    //        x += 5;
+    //    }
+    //    else {
+    //        y += 5;
+    //    }
+    //    cnt++;
+    //}
 
     // @Override
-    public Bullet shoot() {
-        return new FastBullet(false, x + 12, y, color );
+    public Bullet SwingBullet() {
+        return new SwingBullet(false, x + 12, y, color);
     }
 }

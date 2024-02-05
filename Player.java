@@ -44,7 +44,9 @@ public class Player {
 
     // TODO: 自機のx座標から右に +12 したところから射出するようハードコーディングしている
     public Bullet shoot() {
-        return new Bullet(true, x + 12, y, color);
+        Bullet bullet = new Bullet(true, x, y, color);
+        bullet.setPlayerPosition(x, y); // 新しいメソッドを呼び出す
+        return bullet;
         // return new FastBullet(x + 12, y, 0);
     }
 
@@ -73,4 +75,6 @@ public class Player {
         g.fillRect(x+10,y,10,10);
         g.fillRect(x,y+10,30,10);
     }
+
+    
 }
