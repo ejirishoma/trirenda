@@ -21,11 +21,13 @@ import java.util.List;
 
 public class Stage {
     public ShootingFrame shootingFrame;
-    public int playerX,playerY,playerMAXHP;
+    // public int player.x,player.y,playerMAXHP;
+    public int playerMAXHP;
     public Graphics gra;
-    public Stage(int playerX,int playerY,int playerMAXHP,Graphics gra,ShootingFrame shootingFrame){
-        this.playerX=playerX;
-        this.playerY=playerY;
+    // public Stage(int player.x,int player.y,int playerMAXHP,Graphics gra,ShootingFrame shootingFrame){
+        public Stage(int playerMAXHP,Graphics gra,ShootingFrame shootingFrame){
+        // this.player.x=player.x;
+        // this.player.y=player.y;
         this.playerMAXHP=playerMAXHP;
         this.gra=gra;
         this.shootingFrame=shootingFrame;
@@ -45,15 +47,15 @@ public class Stage {
 
         // EnumShootingScene scene=EnumShootingScene.TITLE;
 
-        // int playerX=playerX,playerY=playerY;
+        // int player.x=player.x,player.y=player.y;
         int otherX=0,otherY=0;
         int bulletInterval=0,playerInterval=0,otherInterval=0;
         int playercolor=0;
         int othercolor=0;
         
         int otherHP=0;
-        // int playerMAXHP=10;
-        int playerHP=playerMAXHP;
+        int playerMAXHP=10;
+        
         int otherMAXHP=10;
         int level=0;
         int PlayerinvincibleTime=0;
@@ -66,6 +68,8 @@ public class Stage {
         // ArrayList<Bullet> bullets_other=new ArrayList<>();
         ArrayList<Bullet> bullets_enemy=new ArrayList<>();
         ArrayList<Enemy> enemies= new ArrayList<>();
+        Player player = new Player(235, 400, playercolor);
+        player.HP=playerMAXHP;
         // ArrayList<Enemy> enemies= new ArrayList<>();
         Random random=new Random();
         File f=new File("./src/stage_temp.csv");
@@ -138,18 +142,26 @@ public class Stage {
 
 
             gra.setColor(Color.BLACK);
-            for(int i=0;i<playerHP;i++){
+            for(int i=0;i<player.HP;i++){
                 gra.fillRect(i*500/playerMAXHP,430,500/playerMAXHP,30);
             }
-            if(Keyboard.isKeyPressed(KeyEvent.VK_DOWN)&&playerY<440)playerY+=7;
-            if(Keyboard.isKeyPressed(KeyEvent.VK_LEFT)&&playerX>0)playerX-=7;
-            if(Keyboard.isKeyPressed(KeyEvent.VK_RIGHT)&&playerX<440)playerX+=7;
-            if(Keyboard.isKeyPressed(KeyEvent.VK_UP)&&playerY>0)playerY-=7;
+            // if(Keyboard.isKeyPressed(KeyEvent.VK_DOWN)&&player.y<440)player.y+=7;
+            // if(Keyboard.isKeyPressed(KeyEvent.VK_LEFT)&&player.x>0)player.x-=7;
+            // if(Keyboard.isKeyPressed(KeyEvent.VK_RIGHT)&&player.x<440)player.x+=7;
+            // if(Keyboard.isKeyPressed(KeyEvent.VK_UP)&&player.y>0)player.y-=7;
+            if(Keyboard.isKeyPressed(KeyEvent.VK_LEFT)) player.moveLeft();
+            if(Keyboard.isKeyPressed(KeyEvent.VK_RIGHT)) player.moveRight();
+            if(Keyboard.isKeyPressed(KeyEvent.VK_UP)) player.moveUp();
+            if(Keyboard.isKeyPressed(KeyEvent.VK_DOWN)) player.moveDown();
             
             
+            // if(Keyboard.isKeyPressed(KeyEvent.VK_V)&&playerInterval==0){
+            //     playercolor+=1;
+            //     if(playercolor==3)playercolor=0;
+            //     playerInterval=10;
+            // }
             if(Keyboard.isKeyPressed(KeyEvent.VK_V)&&playerInterval==0){
-                playercolor+=1;
-                if(playercolor==3)playercolor=0;
+                player.changeColor();
                 playerInterval=10;
             }
             if(playerInterval>0)playerInterval--;
@@ -158,32 +170,40 @@ public class Stage {
             if(playercolor==0)gra.setColor(Color.BLUE);
             if(playercolor==1)gra.setColor(Color.RED);
             if(playercolor==2)gra.setColor(Color.GREEN);
-            if(PlayerinvincibleTime==0||(PlayerinvincibleTime%8==0&&PlayerinvincibleTime>0)){
-                gra.fillRect(playerX+10,playerY,10,10);
-                gra.fillRect(playerX,playerY+10,30,10);
+            // if(PlayerinvincibleTime==0||(PlayerinvincibleTime%8==0&&PlayerinvincibleTime>0)){
+            //     gra.fillRect(player.x+10,player.y,10,10);
+            //     gra.fillRect(player.x,player.y+10,30,10);
                 
-            }
+            // }
             if(PlayerinvincibleTime>0){
                 PlayerinvincibleTime--;
             }
 
             if(Keyboard.isKeyPressed(KeyEvent.VK_SPACE)&&bulletInterval==0){
-                bullets_player.add(new Bullet(playerX+12,playerY,playercolor));
+                // bullets_player.add(new Bullet(player.x+12,player.y,playercolor));
+                bullets_player.add(player.shoot());
                 bulletInterval=7;
             }
             if(bulletInterval>0)bulletInterval--;
 
             for(int i=0;i<bullets_player.size();i++){
                 Bullet bullet=bullets_player.get(i);
-                if(bullet.color==0)gra.setColor(Color.BLUE);
-                if(bullet.color==1)gra.setColor(Color.RED);
-                if(bullet.color==2)gra.setColor(Color.GREEN);
-                gra.fillRect(bullet.x,bullet.y,5,5);
-                bullet.y-=10;
-                if(bullet.y<-10){
+                bullet.draw(gra); // 弾の描画
+                bullet.move(); // 弾の移動
+
+                if (bullet.isOffScreen()) {
                     bullets_player.remove(i);
-                    // i--;
+                    i--;
                 }
+                // if(bullet.color==0)gra.setColor(Color.BLUE);
+                // if(bullet.color==1)gra.setColor(Color.RED);
+                // if(bullet.color==2)gra.setColor(Color.GREEN);
+                // gra.fillRect(bullet.x,bullet.y,5,5);
+                // bullet.y-=10;
+                // if(bullet.y<-10){
+                //     bullets_player.remove(i);
+                //     // i--;
+                // }
 
                 for(int j=0;j<enemies.size();j++){
                     Enemy enemy =enemies.get(j);
@@ -224,22 +244,24 @@ public class Stage {
             
             for(int i=0;i<enemies.size();i++){
                 Enemy enemy =enemies.get(i);
-                if(enemy.color==0)gra.setColor(Color.BLUE);
-                if(enemy.color==1)gra.setColor(Color.RED);
-                if(enemy.color==2)gra.setColor(Color.GREEN);
-                gra.fillRect(enemy.x,enemy.y,30,10);
-                gra.fillRect(enemy.x+10,enemy.y+10,10,10);
-                enemy.y+=5;
+                enemy.move();
+                enemy.draw(gra);
+                // if(enemy.color==0)gra.setColor(Color.BLUE);
+                // if(enemy.color==1)gra.setColor(Color.RED);
+                // if(enemy.color==2)gra.setColor(Color.GREEN);
+                // gra.fillRect(enemy.x,enemy.y,30,10);
+                // gra.fillRect(enemy.x+10,enemy.y+10,10,10);
+                // enemy.y+=5;
                 if(enemy.y>500){
                     enemies.remove(i);
                     i--;
                 }
-                if(PlayerinvincibleTime==0&&((enemy.x>=playerX&&enemy.x<=playerX+30&&enemy.y>=playerY&&enemy.y<=playerY+20)||
-                (enemy.x+30>=playerX&&enemy.x+30<=playerX+30&&enemy.y+20>=playerY&&enemy.y+20<=playerY+20))){
-                    playerHP--;
+                if(PlayerinvincibleTime==0&&((enemy.x>=player.x&&enemy.x<=player.x+30&&enemy.y>=player.y&&enemy.y<=player.y+20)||
+                (enemy.x+30>=player.x&&enemy.x+30<=player.x+30&&enemy.y+20>=player.y&&enemy.y+20<=player.y+20))){
+                    player.HP--;
                     PlayerinvincibleTime=100;
                     enemies.remove(i);
-                    if(playerHP<=0){
+                    if(player.HP<=0){
                         // screen=EnumShootingScreen.GAMEOVER;
                         // score+=(level-1)*100;
                         return;
@@ -247,30 +269,37 @@ public class Stage {
                     // screen=EnumShootingScreen.GAMEOVER;
                     
                 }
-                if(random.nextInt(40)==1)bullets_enemy.add(new Bullet(enemy.x+12,enemy.y,enemy.color));
+                if(random.nextInt(40)==1)bullets_enemy.add(new Bullet(false,enemy.x+12,enemy.y,enemy.color));
             }
             //敵の弾処理
             for(int i=0;i<bullets_enemy.size();i++){
                 Bullet bullet=bullets_enemy.get(i);
-                if(bullet.color==0)gra.setColor(Color.BLUE);
-                if(bullet.color==1)gra.setColor(Color.RED);
-                if(bullet.color==2)gra.setColor(Color.GREEN);
-                gra.fillRect(bullet.x,bullet.y,5,5);
-                bullet.y+=10;
-                if(bullet.y>500){
+                bullet.draw(gra); // 弾の描画
+                bullet.move(); // 弾の移動
+
+                if (bullet.isOffScreen()) {
                     bullets_enemy.remove(i);
                     i--;
                 }
-                if(PlayerinvincibleTime==0&&bullet.x>=playerX&&bullet.x<=playerX+30&&bullet.y>=playerY&&bullet.y<=playerY+20&&(playercolor==bullet.color||playercolor==bullet.color+1||(playercolor==0&&bullet.color==2))){
+                // if(bullet.color==0)gra.setColor(Color.BLUE);
+                // if(bullet.color==1)gra.setColor(Color.RED);
+                // if(bullet.color==2)gra.setColor(Color.GREEN);
+                // gra.fillRect(bullet.x,bullet.y,5,5);
+                // bullet.y+=10;
+                // if(bullet.y>500){
+                //     bullets_enemy.remove(i);
+                //     i--;
+                // }
+                if(PlayerinvincibleTime==0&&bullet.x>=player.x&&bullet.x<=player.x+30&&bullet.y>=player.y&&bullet.y<=player.y+20&&(playercolor==bullet.color||playercolor==bullet.color+1||(playercolor==0&&bullet.color==2))){
                     if(playercolor==bullet.color){
-                        playerHP--;
+                        player.HP--;
                     }
                     if(playercolor==bullet.color+1||(playercolor==0&&bullet.color==2)){
-                        playerHP-=5;
+                        player.HP-=5;
                     }
                     PlayerinvincibleTime=100;
                     bullets_enemy.remove(i);
-                    if(playerHP<=0){
+                    if(player.HP<=0){
                         // screen=EnumShootingScreen.GAMEOVER;
                         // score+=(level-1)*100;
                         return;
@@ -278,6 +307,7 @@ public class Stage {
                     
                 }
             }
+            player.draw(gra, PlayerinvincibleTime);
 
             //処理終了
             stage_time++;

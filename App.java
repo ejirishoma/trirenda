@@ -171,7 +171,8 @@ public class App{
                            
                     break;
                 case SINGLEPLAY:
-                    stage=new Stage(playerX,playerY,playerMAXHP,gra,shootingFrame);
+                    // stage=new Stage(playerX,playerY,playerMAXHP,gra,shootingFrame);
+                    stage=new Stage(playerMAXHP,gra,shootingFrame);
                     stage.run();
                     scene=EnumShootingScene.GAMEOVER;
                 case MULTIPLAY:
@@ -202,13 +203,13 @@ public class App{
 
                     //random.nextInt(40)==1がtrueなら発砲
                     if(random.nextInt(40)==1&&playerInterval==0){
-                        bullets_player.add(new Bullet(playerX+12,playerY,playercolor));
+                        bullets_player.add(new Bullet(true,playerX+12,playerY,playercolor));
                         playerInterval=7;
                     }
 
                     //random.nextInt(40)==1がtrueなら発砲
                     if(random.nextInt(40)==1&&otherInterval==0){
-                        bullets_other.add(new Bullet(otherX+12,otherY,othercolor));
+                        bullets_other.add(new Bullet(false,otherX+12,otherY,othercolor));
                         otherInterval=7;
                     }
 
@@ -276,7 +277,7 @@ public class App{
                     }
 
                     if(Keyboard.isKeyPressed(KeyEvent.VK_SPACE)&&bulletInterval==0){
-                        bullets_player.add(new Bullet(playerX+12,playerY,playercolor));
+                        bullets_player.add(new Bullet(true,playerX+12,playerY,playercolor));
                         bulletInterval=7;
                     }
                     if(bulletInterval>0)bulletInterval--;
